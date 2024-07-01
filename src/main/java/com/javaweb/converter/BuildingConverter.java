@@ -3,6 +3,7 @@ package com.javaweb.converter;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.enums.districtCode;
+import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.BuildingSearchResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,14 @@ public class BuildingConverter {
         }
 
         return res;
+    }
+
+    public BuildingDTO converToDTO(BuildingEntity buildingEntity) {
+        BuildingDTO buildingDTO = modelMapper.map(buildingEntity, BuildingDTO.class);
+        List<RentAreaEntity> rentAreaEntityList = buildingEntity.getRentAreaEntities();
+        if (rentAreaEntityList != null && !rentAreaEntityList.isEmpty()) {
+            buildingDTO.setRentArea(rentAreaEntityList.stream().map(it -> it.getValue().toString()).collect(Collectors.joining(",")));
+        }
+        return buildingDTO;
     }
 }

@@ -2,11 +2,13 @@ package com.javaweb.controller.admin;
 
 
 
+import com.javaweb.entity.BuildingEntity;
 import com.javaweb.enums.buildingType;
 import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
+import com.javaweb.repository.BuildingRepository;
 import com.javaweb.service.BuildingService;
 import com.javaweb.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,6 @@ public class BuildingController {
 
     @Autowired
     private BuildingService buildingService;
-
 
     @GetMapping("/admin/building-list")
     public ModelAndView buildingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request) {
@@ -58,9 +59,8 @@ public class BuildingController {
     public ModelAndView buildingEdit(@PathVariable("id") Long id, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("/admin/building/edit");
         //Xuống DB tìm building theo Id
-        BuildingDTO buildingDTO = new BuildingDTO();
-        buildingDTO.setId(id);
-        buildingDTO.setName("Duy Thien Building");
+
+        BuildingDTO buildingDTO = buildingService.findBuildingById(id);
         mav.addObject("buildingEdit", buildingDTO);
         mav.addObject("dictricts", districtCode.type());
         mav.addObject("buildingType", buildingType.type());

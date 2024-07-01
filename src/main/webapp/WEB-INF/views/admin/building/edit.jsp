@@ -73,8 +73,6 @@ file="/common/taglib.jsp" %>
                       class="form-control"
                       type="text"
                       id="street"
-                      name="street"
-                      value=""
                       path="street"
                     />
                   </div>
@@ -93,66 +91,66 @@ file="/common/taglib.jsp" %>
                 <div class="form-group">
                   <label class="col-xs-3">Số tầng hầm</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="number"
                       id="numberofbasement"
-                      name="numberofbasement"
+                      path="numberOfBasement"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Diện tích sàn</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="number"
                       id="floorarea"
-                      name="floorarea"
+                      path="floorArea"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Hướng</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="text"
                       id="direction"
-                      name="direction"
+                      path="floorArea"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Hạng</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="text"
                       id="level"
-                      name="level"
+                      path="level"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Diện tích thuê</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="text"
                       id="rentarea"
-                      name="rentarea"
+                      path="rentArea"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Giá thuê</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="number"
                       id="rentprice"
-                      name="rentprice"
+                      path="rentPrice"
                     />
                   </div>
                 </div>
@@ -452,14 +450,15 @@ file="/common/taglib.jsp" %>
 
         data["typeCode"] = typeCode;
         if (typeCode != "") {
+          console.log(data);
           const response = await post("${buildingAPI}", data);
+          console.log(response);
         } else {
           const buildingListUrl =
             '<c:url value="/admin/building-edit?typeCode=require" />';
 
           window.location.href = buildingListUrl;
         }
-        console.log(response); // In ra console dữ liệu đã thu thập được
       });
 
       // $.ajax({

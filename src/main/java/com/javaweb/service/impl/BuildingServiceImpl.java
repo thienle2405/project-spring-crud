@@ -5,6 +5,7 @@ import com.javaweb.converter.BuildingConverter;
 import com.javaweb.converter.BuildingSearchBuilderConvert;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.ResponseDTO;
@@ -13,6 +14,9 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.BuildingRepositoryCustom;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.BuildingService;
+import com.javaweb.service.RentAreaService;
+import com.javaweb.utils.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,7 @@ import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
@@ -33,10 +38,16 @@ public class BuildingServiceImpl implements BuildingService {
     private UserRepository userRepository;
 
     @Autowired
-    BuildingSearchBuilderConvert buildingSearchBuilderConvert;
+    private BuildingSearchBuilderConvert buildingSearchBuilderConvert;
 
     @Autowired
-    BuildingConverter buildingConverter;
+    private BuildingConverter buildingConverter;
+
+    @Autowired
+    private RentAreaService rentAreaService;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Override
     public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
@@ -77,5 +88,31 @@ public class BuildingServiceImpl implements BuildingService {
         responseDTO.setData(staffResponseDTOS);
         responseDTO.setMessage("success");
         return responseDTO;
+    }
+
+    @Override
+    public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO) {
+        Long buildingId = buildingDTO.getId();
+        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+
+        List<String> typeCode = buildingDTO.getTypeCode();
+        buildingEntity.setTypeCode(String.join(",", typeCode));
+
+        buildingRepository.save(buildingEntity); //Có id là update luôn
+
+        if(StringUtils.check(buildingDTO.getRentArea())) {
+            rentAreaService.addRentArea(buildingDTO);
+        }
+        return buildingDTO;
+    }
+
+    @Override
+    public BuildingDTO findBuildingById(Long id) {
+        Optional<BuildingEntity> opt = buildingRepository.findById(id);
+        BuildingEntity buildingEntity = new BuildingEntity();
+        if (opt.isPresent()) {
+            buildingEntity = opt.get();
+        }
+        return buildingConverter.converToDTO(buildingEntity);
     }
 }

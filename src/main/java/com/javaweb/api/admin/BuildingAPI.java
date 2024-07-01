@@ -17,10 +17,9 @@ public class BuildingAPI {
     private BuildingService buildingService;
 
     @PostMapping
-    public BuildingDTO addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO){
+    public ResponseEntity<BuildingDTO> addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO){
         //Xuong DB để update hoặc thêm mới
-        System.out.println(buildingDTO);
-        return buildingDTO;
+        return ResponseEntity.ok(buildingService.addOrUpdateBuilding(buildingDTO));
     }
 
     @DeleteMapping("/{ids}")
