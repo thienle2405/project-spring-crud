@@ -1,5 +1,8 @@
 package com.javaweb.service.impl;
 
+import com.javaweb.builder.BuildingSearchBuilder;
+import com.javaweb.converter.BuildingConverter;
+import com.javaweb.converter.BuildingSearchBuilderConvert;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.request.BuildingSearchRequest;
@@ -7,6 +10,7 @@ import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.BuildingRepositoryCustom;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,32 @@ public class BuildingServiceImpl implements BuildingService {
     private BuildingRepository buildingRepository;
 
     @Autowired
+    BuildingRepositoryCustom buildingRepositoryCustom;
+
+    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    BuildingSearchBuilderConvert buildingSearchBuilderConvert;
+
+    @Autowired
+    BuildingConverter buildingConverter;
+
     @Override
-    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest, Pageable pageable) {
+    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
+
         List <String> typeCode = buildingSearchRequest.getTypeCode();
-        return Collections.emptyList();
+        //Chuyển đỏi sang Builder Pattern
+        BuildingSearchBuilder buildingSearchBuilder = buildingSearchBuilderConvert.toBuildingSearchBuilder(buildingSearchRequest, typeCode);
+
+        List<BuildingEntity> buildingEntities = buildingRepositoryCustom.findAll(buildingSearchBuilder);
+        List<BuildingSearchResponse> res = new ArrayList<>();
+
+        for(BuildingEntity item : buildingEntities) {
+            BuildingSearchResponse building = buildingConverter.toBuildingSearchResponse(item);
+            res.add(building);
+        }
+        return res;
     }
 
     @Override

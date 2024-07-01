@@ -58,24 +58,24 @@ file="/common/taglib.jsp" %>
                 <div class="form-group">
                   <label class="col-xs-3">Phường</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="text"
                       id="ward"
-                      name="ward"
-                      value=""
+                      path="ward"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-xs-3">Đường</label>
                   <div class="col-xs-9">
-                    <input
+                    <form:input
                       class="form-control"
                       type="text"
                       id="street"
                       name="street"
                       value=""
+                      path="street"
                     />
                   </div>
                 </div>
@@ -455,7 +455,7 @@ file="/common/taglib.jsp" %>
           const response = await post("${buildingAPI}", data);
         } else {
           const buildingListUrl =
-            '<c:url value="/admin/building-list?typeCode=require" />';
+            '<c:url value="/admin/building-edit?typeCode=require" />';
 
           window.location.href = buildingListUrl;
         }

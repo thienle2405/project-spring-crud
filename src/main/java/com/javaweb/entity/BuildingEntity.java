@@ -75,6 +75,24 @@ public class BuildingEntity {
     @Column(name = "managerphone")
     private String managerPhone;
 
+    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+    private List<RentAreaEntity> rentAreaEntities = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<RentAreaEntity> getRentAreaEntities() {
+        return rentAreaEntities;
+    }
+
+    public void setRentAreaEntities(List<RentAreaEntity> rentAreaEntities) {
+        this.rentAreaEntities = rentAreaEntities;
+    }
 //    @OneToMany(fetch = FetchType.LAZY,mappedBy = "buildingEntity")
 //    List<AssignBuildingEntity> assignBuildingEntities = new ArrayList<>();
 
