@@ -93,8 +93,9 @@ public class BuildingEntity {
     public void setRentAreaEntities(List<RentAreaEntity> rentAreaEntities) {
         this.rentAreaEntities = rentAreaEntities;
     }
-//    @OneToMany(fetch = FetchType.LAZY,mappedBy = "buildingEntity")
-//    List<AssignBuildingEntity> assignBuildingEntities = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "building")
+    List<AssignBuildingEntity> assignBuildingEntities = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.MERGE})
     @JoinTable(name = "assignmentbuilding",

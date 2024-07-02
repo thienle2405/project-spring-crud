@@ -16,4 +16,5 @@ public interface BuildingService {
     public ResponseDTO lissStaffs(Long buildingId);
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO);
     public BuildingDTO findBuildingById(Long id);
+    public void deleteBuildings(List<Long> ids);
 }

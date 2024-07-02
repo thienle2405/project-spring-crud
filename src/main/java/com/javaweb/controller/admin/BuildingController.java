@@ -64,7 +64,6 @@ public class BuildingController {
         mav.addObject("buildingEdit", buildingDTO);
         mav.addObject("dictricts", districtCode.type());
         mav.addObject("buildingType", buildingType.type());
-
         return mav;
     }
 }

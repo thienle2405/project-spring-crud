@@ -10,15 +10,19 @@ import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
+import com.javaweb.repository.AssignmentBuildingRepository;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.BuildingRepositoryCustom;
 import com.javaweb.repository.UserRepository;
+import com.javaweb.service.AssignmentBuildingService;
 import com.javaweb.service.BuildingService;
 import com.javaweb.service.RentAreaService;
 import com.javaweb.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.util.ArrayList;
@@ -48,6 +52,9 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    private AssignmentBuildingRepository assignmentBuildingRepository;
 
     @Override
     public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
@@ -95,6 +102,7 @@ public class BuildingServiceImpl implements BuildingService {
         Long buildingId = buildingDTO.getId();
         BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
 
+
         List<String> typeCode = buildingDTO.getTypeCode();
         buildingEntity.setTypeCode(String.join(",", typeCode));
 
@@ -114,5 +122,12 @@ public class BuildingServiceImpl implements BuildingService {
             buildingEntity = opt.get();
         }
         return buildingConverter.converToDTO(buildingEntity);
+    }
+
+    @Override
+    public void deleteBuildings(List<Long> ids) {
+        rentAreaService.deleteByBuildings(ids);
+        assignmentBuildingRepository.deleteByBuilding_IdIn(ids);
+        for(Long id : ids) buildingRepository.deleteById(id);
     }
 }

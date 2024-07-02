@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController(value = "buildingAPIOfAdmin")
 @RequestMapping("/api/building")
@@ -23,9 +25,12 @@ public class BuildingAPI {
     }
 
     @DeleteMapping("/{ids}")
-    public void deleteBuilding(@PathVariable List<Long> ids) {
+    public ResponseEntity<?> deleteBuilding(@PathVariable List<Long> ids) {
         //Xuống DB để xóa
-        System.out.print("Đã xóa");
+        buildingService.deleteBuildings(ids);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/staffs")

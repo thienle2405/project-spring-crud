@@ -523,8 +523,8 @@ file="/common/taglib.jsp" %>
               staffList.querySelectorAll("tbody input[type=checkbox]:checked")
             ).map((checkbox) => checkbox.value);
             data["staffs"] = selectedStaffs;
-            if (data["staffs"] != '') {
-              const result = await post("${buildingAPI}/assigment",data);
+            if (data["staffs"] != "") {
+              const result = await post("${buildingAPI}/assigment", data);
             }
           });
         });
@@ -547,13 +547,17 @@ file="/common/taglib.jsp" %>
         return result;
       };
 
-      const btnDelete = document.querySelector("#btnDelete");
-      btnDelete.addEventListener("click", async () => {
-        const buildingId = [btnDelete.getAttribute("buildingId")];
-        const buildingIdStr = buildingId.join(",");
-        console.log(buildingIdStr);
-        console.log("${buildingAPI}/" + buildingIdStr);
-        const response = await del("${buildingAPI}/" + buildingId, buildingId);
+      document.querySelectorAll("#btnDelete").forEach((btnDelete) => {
+        btnDelete.addEventListener("click", async () => {
+          const buildingId = btnDelete.getAttribute("buildingId");
+          console.log(buildingId);
+          console.log("${buildingAPI}/" + buildingId);
+          const response = await del(
+            "${buildingAPI}/" + buildingId,
+            buildingId
+          );
+          window.location.href = buildingListUrl
+        });
       });
 
       const btnDeleteBuildings = document.querySelector("#btnDeleteBuildings");

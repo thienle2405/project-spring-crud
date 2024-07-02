@@ -1,34 +1,43 @@
-//package com.javaweb.entity;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.JoinColumn;
-//import javax.persistence.ManyToOne;
-//import javax.persistence.Table;
-//
-//@Entity
-//@Table(name = "assignmentbuilding")
-//public class AssignBuildingEntity extends BaseEntity{
-//    @ManyToOne
-//    @JoinColumn(name = "staffid")
-//    private UserEntity userEntity;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "buildingid")
-//    private BuildingEntity buildingEntity;
-//
-//    public UserEntity getUserEntity() {
-//        return userEntity;
-//    }
-//
-//    public void setUserEntity(UserEntity userEntity) {
-//        this.userEntity = userEntity;
-//    }
-//
-//    public BuildingEntity getBuildingEntity() {
-//        return buildingEntity;
-//    }
-//
-//    public void setBuildingEntity(BuildingEntity buildingEntity) {
-//        this.buildingEntity = buildingEntity;
-//    }
-//}
+package com.javaweb.entity;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "assignmentbuilding")
+public class AssignBuildingEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "staffid")
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "buildingid")
+    private BuildingEntity building;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public BuildingEntity getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(BuildingEntity building) {
+        this.building = building;
+    }
+}

@@ -10,6 +10,8 @@ import com.javaweb.service.RentAreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RentAreaServiceImpl implements RentAreaService {
 
@@ -23,8 +25,12 @@ public class RentAreaServiceImpl implements RentAreaService {
     private RentAreaConverter rentAreaConverter;
 
     @Override
-    public void deleteBuBuildins(Long[] ids) {
-
+    public void deleteByBuildings(List<Long> ids) {
+//        for (Long it : ids) {
+//            BuildingEntity buildingEntity = buildingRepository.findById(Long.valueOf(it)).get();
+//            rentAreaRepository.deleteByBuildingId(buildingEntity);
+//        }
+        rentAreaRepository.deleteByBuilding_IdIn(ids);
     }
 
     @Override
