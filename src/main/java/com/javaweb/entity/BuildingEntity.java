@@ -75,8 +75,17 @@ public class BuildingEntity {
     @Column(name = "managerphone")
     private String managerPhone;
 
-    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RentAreaEntity> rentAreaEntities = new ArrayList<>();
+
+//    @OneToMany(fetch = FetchType.LAZY,mappedBy = "building")
+//    List<AssignBuildingEntity> assignBuildingEntities = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinTable(name = "assignmentbuilding",
+            joinColumns = @JoinColumn(name = "buildingid",nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "staffid",nullable = false))
+    private List<UserEntity> userEntities = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -93,15 +102,6 @@ public class BuildingEntity {
     public void setRentAreaEntities(List<RentAreaEntity> rentAreaEntities) {
         this.rentAreaEntities = rentAreaEntities;
     }
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "building")
-    List<AssignBuildingEntity> assignBuildingEntities = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.MERGE})
-    @JoinTable(name = "assignmentbuilding",
-            joinColumns = @JoinColumn(name = "buildingid",nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "staffid",nullable = false))
-    private List<UserEntity> userEntities = new ArrayList<>();
 
     public List<UserEntity> getUserEntities() {
         return userEntities;

@@ -19,6 +19,9 @@ public class BuildingConverter {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private RentAreaConverter rentAreaConverter;
+
     public BuildingSearchResponse toBuildingSearchResponse(BuildingEntity buildingEntity) {
         BuildingSearchResponse res = modelMapper.map(buildingEntity, BuildingSearchResponse.class);
 
@@ -50,5 +53,12 @@ public class BuildingConverter {
             buildingDTO.setRentArea(rentAreaEntityList.stream().map(it -> it.getValue().toString()).collect(Collectors.joining(",")));
         }
         return buildingDTO;
+    }
+
+    public BuildingEntity toBuildingEntity(BuildingDTO buildingDTO) {
+        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+        buildingEntity.setTypeCode(String.join(",", buildingDTO.getTypeCode()));
+        buildingEntity.setRentAreaEntities(rentAreaConverter.toRentAreaEntityList(buildingDTO, buildingEntity));
+        return buildingEntity;
     }
 }

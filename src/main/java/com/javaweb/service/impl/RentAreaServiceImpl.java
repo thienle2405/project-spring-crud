@@ -36,11 +36,11 @@ public class RentAreaServiceImpl implements RentAreaService {
     @Override
     public void addRentArea(BuildingDTO buildingDTO) {
         BuildingEntity buildingEntity = buildingRepository.findById(buildingDTO.getId()).get();
-        rentAreaRepository.deleteByBuildingId(buildingEntity);
+        rentAreaRepository.deleteByBuilding(buildingEntity);
 
         String[] rentAreas = buildingDTO.getRentArea().trim().split(",");
         for(String item : rentAreas) {
-            RentAreaEntity rentAreaEntity = rentAreaConverter.toRentAreaEntity(buildingDTO, Long.valueOf(item));
+            RentAreaEntity rentAreaEntity = rentAreaConverter.toRentAreaEntityFromDTO(buildingDTO, Long.valueOf(item));
             rentAreaRepository.save(rentAreaEntity);
         }
     }

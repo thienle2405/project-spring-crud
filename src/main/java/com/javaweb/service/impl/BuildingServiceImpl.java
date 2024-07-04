@@ -5,16 +5,15 @@ import com.javaweb.converter.BuildingConverter;
 import com.javaweb.converter.BuildingSearchBuilderConvert;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.dto.AssignmentBuildingDTO;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
-import com.javaweb.repository.AssignmentBuildingRepository;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.BuildingRepositoryCustom;
 import com.javaweb.repository.UserRepository;
-import com.javaweb.service.AssignmentBuildingService;
 import com.javaweb.service.BuildingService;
 import com.javaweb.service.RentAreaService;
 import com.javaweb.utils.StringUtils;
@@ -52,9 +51,6 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     ModelMapper modelMapper;
-
-    @Autowired
-    private AssignmentBuildingRepository assignmentBuildingRepository;
 
     @Override
     public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
@@ -99,18 +95,9 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO) {
+        BuildingEntity buildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
         Long buildingId = buildingDTO.getId();
-        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
-
-
-        List<String> typeCode = buildingDTO.getTypeCode();
-        buildingEntity.setTypeCode(String.join(",", typeCode));
-
-        buildingRepository.save(buildingEntity); //Có id là update luôn
-
-        if(StringUtils.check(buildingDTO.getRentArea())) {
-            rentAreaService.addRentArea(buildingDTO);
-        }
+        buildingRepository.save(buildingEntity);
         return buildingDTO;
     }
 
@@ -124,10 +111,18 @@ public class BuildingServiceImpl implements BuildingService {
         return buildingConverter.converToDTO(buildingEntity);
     }
 
+    @Transactional
     @Override
     public void deleteBuildings(List<Long> ids) {
-        rentAreaService.deleteByBuildings(ids);
-        assignmentBuildingRepository.deleteByBuilding_IdIn(ids);
-        for(Long id : ids) buildingRepository.deleteById(id);
+        buildingRepository.deleteByIdIn(ids);
+    }
+
+    //Giao tòa nhà cho nhân viên quản lý
+    @Override
+    public void addAssignmentBuildingEntity(AssignmentBuildingDTO assignmentBuildingDTO) {
+        BuildingEntity buildingEntity = buildingRepository.findById(assignmentBuildingDTO.getBuildingId()).get();
+        List<UserEntity> staffs = userRepository.findByIdIn(assignmentBuildingDTO.getStaffs());
+        buildingEntity.setUserEntities(staffs);
+        buildingRepository.save(buildingEntity);
     }
 }

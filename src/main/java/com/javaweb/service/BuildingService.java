@@ -1,5 +1,6 @@
 package com.javaweb.service;
 
+import com.javaweb.model.dto.AssignmentBuildingDTO;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
@@ -17,4 +18,5 @@ public interface BuildingService {
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO);
     public BuildingDTO findBuildingById(Long id);
     public void deleteBuildings(List<Long> ids);
+    public void addAssignmentBuildingEntity(AssignmentBuildingDTO assignmentBuildingDTO);
 }
